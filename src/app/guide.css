@@ -1,0 +1,24 @@
+
+img { width: 100%; height: auto; }
+
+p{ margin:4px 0; }
+
+@keyframes animateText {
+    0%,50%, 100% {color: rgb(250,204,21);}
+    25%,75% {color: #ff0000;}
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8,0,1,1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0,0,0.2,1);
+  }
+}
+
+.picture li{ text-align: center; }
+.picture span{display:inline-flex; position: relative; background:#000000; color:#FFFFFF; font-size:12px; padding:2px 5px; margin: 4px auto 0; border-radius:4px; }
+.booking span{display:inline-flex; position: relative; background:#000000; color:#FFFFFF; font-size:12px; padding:2px 5px; margin: 4px 1px 0; border-radius:4px; }

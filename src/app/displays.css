@@ -1,0 +1,9 @@
+.animateText{  
+  animation: animateText 10s infinite;
+}
+@keyframes animateText {
+    0% {color: #FFFFFF;}
+    50% { background-color: #ff0000; }
+    100% { background-color: rgb(250,204,21); }
+}
+

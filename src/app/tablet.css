@@ -1,0 +1,24 @@
+#roomState{
+  min-height: calc(100vh - 80px);  
+}
+
+.animateText{  
+  animation: animateText 2s infinite;  
+  animation-fill-mode: backwards;  
+}
+@keyframes animateText {
+    0%,50%, 100% {color: rgb(250,204,21);}
+    25%,75% {color: #ff0000;}
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8,0,1,1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0,0,0.2,1);
+  }
+}
+
