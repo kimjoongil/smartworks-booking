@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model bookingtbl {
+  id           Int                @id @default(autoincrement())
+  roomId       Int?
+  userId       Int?
+  user_email   String?            @db.VarChar(255)
+  starttime    DateTime           @db.DateTime(0)
+  endtime      DateTime           @db.DateTime(0)
+  attendees    Int?
+  topic        String?            @db.VarChar(255)
+  booking_user String             @db.VarChar(255)
+  booking_pwd  String             @db.Char(4)
+  checkin      bookingtbl_checkin @default(N)
+  createdAt    DateTime           @default(now()) @db.DateTime(0)
+  usertbl      usertbl?           @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "bookingtbl_ibfk_1")
+  roomtbl      roomtbl?           @relation(fields: [roomId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "bookingtbl_ibfk_2")
+
+  @@index([userId], map: "userId")
+  @@index([roomId], map: "roomId")
+}
+
+model brand {
+  id      Int       @id @default(autoincrement())
+  name    String    @db.VarChar(255)
+  product product[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model listingtbl {
+  id            Int           @id @default(autoincrement())
+  title         String?       @db.VarChar(255)
+  description   String?       @db.Text
+  imageSrc      String?       @db.VarChar(255)
+  createdAt     DateTime      @default(now()) @db.DateTime(0)
+  category      String?       @db.VarChar(255)
+  roomCount     Int?
+  bathroomCount Int?
+  guestCount    Int?
+  locationValue String?       @db.VarChar(255)
+  price         Int?
+  userId        Int?
+  usertbl       usertbl?      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "listingtbl_ibfk_1")
+  reservation   reservation[]
+
+  @@index([userId], map: "userId")
+}
+
+model product {
+  id        Int       @id @default(autoincrement())
+  title     String    @db.VarChar(255)
+  price     Int
+  createdAt DateTime? @default(now()) @db.DateTime(0)
+  updatedAt DateTime? @db.DateTime(0)
+  brandId   Int
+  brand     brand     @relation(fields: [brandId], references: [id], onUpdate: Restrict, map: "product_ibfk_1")
+
+  @@index([brandId], map: "brandId")
+}
+
+model reservation {
+  id         Int         @id @default(autoincrement())
+  userId     Int?
+  listingId  Int?
+  startDate  DateTime    @db.DateTime(0)
+  endDate    DateTime    @db.DateTime(0)
+  totalPrice Int?
+  createdAt  DateTime?   @default(now()) @db.DateTime(0)
+  usertbl    usertbl?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "reservation_ibfk_1")
+  listingtbl listingtbl? @relation(fields: [listingId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "reservation_ibfk_2")
+
+  @@index([listingId], map: "listingId")
+  @@index([userId], map: "userId")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model roomtbl {
+  id         Int               @id @default(autoincrement())
+  roomimg    String?           @db.VarChar(255)
+  roomname   String            @db.VarChar(255)
+  capacity   Int?
+  roomstate  roomtbl_roomstate @default(N)
+  roomdesc   String?           @db.Text
+  roometc    String?           @db.Text
+  createdAt  DateTime          @default(now()) @db.DateTime(0)
+  bookingtbl bookingtbl[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model usertbl {
+  id             Int           @id @default(autoincrement())
+  name           String?       @db.VarChar(255)
+  email          String?       @unique(map: "email") @db.VarChar(255)
+  emailVerified  DateTime?     @db.DateTime(0)
+  hashedPassword String?       @db.VarChar(255)
+  createdAt      DateTime?     @default(now()) @db.DateTime(0)
+  updatedAt      DateTime?     @db.DateTime(0)
+  favoriteIds    String?       @db.VarChar(255)
+  bookingtbl     bookingtbl[]
+  listingtbl     listingtbl[]
+  reservation    reservation[]
+}
+
+enum bookingtbl_checkin {
+  Y
+  N
+}
+
+enum roomtbl_roomstate {
+  Y
+  N
+}
